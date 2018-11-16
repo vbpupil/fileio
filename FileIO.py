@@ -20,16 +20,13 @@ class FileIO:
 
     def set_file(self,file):
         if isinstance(file, str):
-            if self.directory_exists(file):
-                self.file = file
-            else:
-                raise IOError('File does not exist')
+            self.file = file
         else:
             raise ValueError('Incorrect TYPE, string is required')
 
     def write(self, data, type='w'):
         try:
-            file = open(self.path, type)
+            file = open(self.path+'/'+self.file, type)
             file.write(str(data))
         except IOError:
             raise IOError('Problem writing to file: ' + self.path)
@@ -76,4 +73,7 @@ class FileIO:
         if self.file_is_set():
             return self.file
         raise Exception('File name has not been set.')
+
+    def empty_file(self):
+        open(self.path+'/'+self.file, 'w').close()
 
