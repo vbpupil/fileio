@@ -5,11 +5,23 @@ sys.tracebacklimit = 0
 
 
 class FileIO:
-    def __init__(self, path):
+    file = None
+    path = None
+
+
+    def set_path(self,path):
         if isinstance(path, str):
-            tmp_file = Path(path)
-            if tmp_file.is_file():
+            if self.directory_exists(path):
                 self.path = path
+            else:
+                raise IOError('Directory does not exist')
+        else:
+            raise ValueError('Incorrect TYPE, string is required')
+
+    def set_file(self,file):
+        if isinstance(file, str):
+            if self.directory_exists(file):
+                self.file = file
             else:
                 raise IOError('File does not exist')
         else:
@@ -29,7 +41,7 @@ class FileIO:
         except IOError:
             raise IOError('Problem reading from file: ' + self.path)
 
-    def return_list(self):
+    def read_list(self):
         try:
             src = open(self.path, 'r')
             return [line.rstrip() for line in src.readlines()]
@@ -42,3 +54,26 @@ class FileIO:
 
     def delete(self,path):
         os.remove(path)
+
+    def directory_exists(self, path):
+        return os.path.isdir(path)
+
+    def directory_is_set(self):
+        return self.path != None
+
+    def file_exists(self, file):
+        return os.path.exists(file)
+
+    def file_is_set(self):
+        return self.file != None
+
+    def get_path(self):
+        if self.directory_is_set():
+            return self.path
+        raise Exception('Directory has not been set.')
+
+    def get_file(self):
+        if self.file_is_set():
+            return self.file
+        raise Exception('File name has not been set.')
+
